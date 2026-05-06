@@ -23,6 +23,7 @@ namespace LojaEcomerce.Controllers
             return View();
         }
 
+        // Método Login
         [HttpPost]
         public async Task<IActionResult>Login(LoginViewModel user)
         {
@@ -52,5 +53,30 @@ namespace LojaEcomerce.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        public IActionResult CriarConta() => View();
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CriarConta(LoginViewModel usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                _usuarioRepositorio.CriarConta(usuario);
+                return RedirectToAction("Login");
+            }
+                return View(usuario);
+        }
+
+        //Método Sair, qual a diferença do signoutasync pro session
+        public async Task<IActionResult> Sair()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("login");
+        }
+
+        
+
     }
 }

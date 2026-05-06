@@ -1,7 +1,15 @@
 using LojaEcomerce.Interfaces;
 using LojaEcomerce.Repositorio;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Usuario/Login";
+        options.AccessDeniedPath = "/Usuario/AcessoNegado";
+    });
 
 // INJEÇÃO DE DEPENDENCIA
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
@@ -25,6 +33,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
